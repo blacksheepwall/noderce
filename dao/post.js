@@ -37,8 +37,8 @@ exports.insert = function (obj, callback) {
   });
 };
 
-exports.update = function (old_slug, post, callback) {
-  db.post.update({slug: old_slug}, {$set: post }, function (err, result) {
+exports.update = function (id, post, callback) {
+  db.post.update({id: id}, {$set: post }, function (err, result) {
     callback(err, result);
   })
 };
@@ -50,5 +50,11 @@ exports.delete = function (slug, callback) {
 exports.count = function (condition, callback) {
   db.post.count(condition, function (err, count) {
     callback(err, count);
+  });
+};
+
+exports.deleteById = function (id, callback) {
+  db.post.remove({id: id}, function (err, result) {
+    callback(err, result);
   });
 };

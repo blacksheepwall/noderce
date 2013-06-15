@@ -59,9 +59,9 @@ exports.tag = function (req, res, next) {
 };
 
 
-// URL: /post/slug
+// URL: /post/id
 exports.post = function (req, res, next) {
-  postDao.get({slug: req.params.slug}, function (err, post) {
+  postDao.get({id: req.params.id}, function (err, post) {
     if (err) {
       res.statusCode = 500;
       res.send('500');
@@ -72,12 +72,12 @@ exports.post = function (req, res, next) {
       //如果不存在 content_html，更新
       if (!post.content_html) {
         post.content_html = marked(post.content);
-        postDao.update(post.slug, {content_html: post.content_html}, function () {
+        postDao.update(post.id, {content_html: post.content_html}, function () {
         })
       }
       var page_title = config.name + " › " + post.title;
 
-      commentDao.findByPostId(post._id.toString(), function (err, comments) {
+      commentDao.findByPostId(post.id, function (err, comments) {
 
         for (var i = 0; i < comments.length; i++) {
           if (!comments[i].avatar) {
@@ -97,15 +97,15 @@ exports.post = function (req, res, next) {
   });
 };
 
-// URL: /page/slug
+// URL: /page/id
 exports.page = function (req, res, next) {
-  pageDao.get({'slug': req.params.slug}, function (err, page) {
+  pageDao.get({'id': req.params.id}, function (err, page) {
     if (!err && page != null) {
       page.content = marked(page.content);
       //如果不存在 content_html，更新
       if (!page.content_html) {
         page.content_html = marked(page.content);
-        pageDao.update(page.slug, {content_html: page.content_html}, function () {
+        pageDao.update(page.id, {content_html: page.content_html}, function () {
         })
       }
       page.page_title = config.name + " › " + page.title;
@@ -131,7 +131,7 @@ exports.comment = function (req, res, next) {
     console.log("no_author not is empty");
     return res.redirect("/fuck-spam-comment");
   } else {
-    postDao.get({slug: slug}, function (err, post) {
+    postDao.get({id: id}, function (err, post) {
       if (!err && post != null) {
         var comment = {
           post_id: req.body.id,
@@ -147,7 +147,7 @@ exports.comment = function (req, res, next) {
 
         // 非空检查
         if (comment.author == "" || comment.email == "" || comment.content == "") {
-          return res.redirect("/post/" + post.slug);
+          return res.redirect("/post/" + post.id);
         }
 
         // URL 格式检查
@@ -186,7 +186,7 @@ exports.comment = function (req, res, next) {
                 }
               });
             }
-            return res.redirect("/post/" + post.slug);
+            return res.redirect("/post/" + post.id);
           }
         });
       } else {

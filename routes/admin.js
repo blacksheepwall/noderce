@@ -22,7 +22,7 @@ exports.index = function (req, res) {
 
 // URL: /admin/post
 exports.postIndex = function (req, res) {
-  postDao.all(function (err, result) {
+  postDao.all(function(err, result) {
     if (!err)
       res.render('admin/post_index', {layout: false, post_list: result});
   });
@@ -39,6 +39,7 @@ exports.postWrite = function (req, res) {
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
 
     var post = {
+      id: +new Date() + '',
       title: req.body.title,
       slug: req.body.slug,
       content: req.body.content,
@@ -49,7 +50,7 @@ exports.postWrite = function (req, res) {
 
     postDao.insert(post, function (err, result) {
       if (!err) {
-        res.redirect('/admin/post/edit/' + post.slug);
+        res.redirect('/admin/post/edit/' + post.id);
       } else {
         console.log("error");
       }
@@ -60,8 +61,8 @@ exports.postWrite = function (req, res) {
 // URL : /admin/post/edit
 exports.postEdit = function (req, res) {
   if (req.method == "GET") {
-    var slug = req.params.slug;
-    postDao.get({slug: slug}, function (err, post) {
+    var id = req.params.id;
+    postDao.get({'id': id}, function (err, post) {
       if (post != null)
         res.render('admin/post_edit', {layout: false, post: post});
       else
@@ -81,16 +82,21 @@ exports.postEdit = function (req, res) {
       created: created,
       tags: req.body.tags.split(',')
     };
-    postDao.update(req.body.old_slug, post, function (err) {
-      if (!err)
-        res.redirect('/admin/post/edit/' + post.slug + "?msg=success");
+    postDao.update(req.body.post_id, post, function (err) {
+      if (!err) {
+        res.redirect('/admin/post/edit/' + req.body.post_id + "?msg=success");
+      }
     });
   }
 };
 
 exports.postDelete = function (req, res) {
   if (req.method == "GET") {
-
+    postDao.deleteById(req.params.id, function(err, result) {
+      if (!err) {
+        res.redirect("/admin/post");
+      }
+    });
   }
 };
 
@@ -190,6 +196,7 @@ exports.verifyAkismet = function (req, res) {
 exports.submitSpam = function (req, res) {
   commentDao.findOne(req.params.id, function (err, comment) {
     if (!err) {
+      // buggy
       akismet.submitSpam({
         user_ip: comment.ip,
         permalink: config.url + "/post/" + comment.post_slug,
@@ -211,8 +218,6 @@ exports.submitSpam = function (req, res) {
     }
     res.redirect("/admin/comment");
   });
-
-
 };
 
 
@@ -315,6 +320,7 @@ exports.install = function (req, res, next) {
 
               //发布一个 Hello World! 的文章
               var post = {
+                id: +new Date() + '',
                 title: "Hello world!",
                 slug: "hello-world",
                 content: "欢迎使用 noderce. 这是程序自动发布的一篇文章。欢迎 fork noderce : https://github.com/willerce/noderce",
@@ -333,7 +339,6 @@ exports.install = function (req, res, next) {
                     content: "欢迎使用Noderce，欢迎与我交流Nodejs相关技术、",
                     created: dateFormat(new Date(), "isoDateTime")
                   };
-
 
                   commentDao.insert(comment, function (err, result) {
                     if (!err) res.redirect('/admin/install?msg=success');

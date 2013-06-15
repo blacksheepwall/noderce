@@ -15,7 +15,7 @@
     <ul>
       <li><a href="/admin">Home</a><span> ›</span></li>
       <li><a href="/admin/post">Post Index</a><span> ›</span></li>
-      <li><a href="/admin/post/edit/<%=post.slug%>"><%=post.title%></a><span> ›</span></li>
+      <li><a href="/admin/post/edit/<%=post.id%>"><%=post.title%></a><span> ›</span></li>
     </ul>
     <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
   </div>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div id='meta'>
-      <input type='hidden' name='old_slug' id="post_old_slug" value='<%=post.slug%>'>
+      <input type='hidden' name='post_id' id="post_old_slug" value='<%=post.id%>'>
       <button class='btn btn-small'><a id='post-it'>Edit Done</a></button>
     </div>
     <div class="clearfix"></div>

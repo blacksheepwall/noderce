@@ -9,11 +9,11 @@ var admin = require('./routes/admin');
 
 module.exports = function (app) {
   app.get('/', blog.index);
-  app.get('/post/:slug', blog.post);
+  app.get('/post/:id', blog.post);
   app.get(/^\/p\/(\d+)$/, blog.index);
   app.get('/feed', blog.feed);
   app.get('/archives', blog.archives);
-  app.get('/page/:slug', blog.page);
+  app.get('/page/:id', blog.page);
   app.post('/comment', blog.comment);
 
   app.get('/tag/:tag', blog.tag);
@@ -31,15 +31,15 @@ module.exports = function (app) {
   app.get('/admin/post', admin.auth_user, admin.postIndex);
   app.get('/admin/post/write', admin.auth_user, admin.postWrite);
   app.post('/admin/post/write', admin.auth_user, admin.postWrite);
-  app.get('/admin/post/edit/:slug', admin.auth_user, admin.postEdit);
-  app.post('/admin/post/edit/:slug', admin.auth_user, admin.postEdit);
-  app.post('/admin/post/delete/:slug', admin.auth_user, admin.postDelete);
+  app.get('/admin/post/edit/:id', admin.auth_user, admin.postEdit);
+  app.post('/admin/post/edit/:id', admin.auth_user, admin.postEdit);
+  app.get('/admin/post/delete/:id', admin.auth_user, admin.postDelete);
 
   app.get('/admin/page', admin.auth_user, admin.pageIndex);
   app.get('/admin/page/write', admin.auth_user, admin.pageWrite);
   app.post('/admin/page/write', admin.auth_user, admin.pageWrite);
-  app.get('/admin/page/edit/:slug', admin.auth_user, admin.pageEdit);
-  app.post('/admin/page/edit/:slug', admin.auth_user, admin.pageEdit);
+  app.get('/admin/page/edit/:id', admin.auth_user, admin.pageEdit);
+  app.post('/admin/page/edit/:id', admin.auth_user, admin.pageEdit);
 
   app.get('/admin/comment', admin.auth_user, admin.commentIndex);
   app.get('/admin/comment/delete/:id', admin.auth_user, admin.commentDelete);
