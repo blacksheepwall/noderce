@@ -119,6 +119,7 @@ exports.pageWrite = function (req, res) {
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd")
 
     var page = {
+      id: +new Date() + '',
       title: req.body.title,
       slug: req.body.slug,
       content: req.body.content,
@@ -128,7 +129,7 @@ exports.pageWrite = function (req, res) {
 
     pageDao.insert(page, function (err, result) {
       if (!err) {
-        res.redirect('/admin/page/edit/' + page.slug);
+        res.redirect('/admin/page/edit/' + page.id);
       } else {
         console.log(err);
       }
@@ -139,8 +140,8 @@ exports.pageWrite = function (req, res) {
 // URL : /admin/page/edit
 exports.pageEdit = function (req, res) {
   if (req.method == "GET") {
-    var slug = req.params.slug;
-    pageDao.get({slug: slug}, function (err, page) {
+    var id = req.params.id;
+    pageDao.get({id: id}, function (err, page) {
       if (page != null)
         res.render('admin/page_edit', {layout: false, page: page});
       else
@@ -159,9 +160,9 @@ exports.pageEdit = function (req, res) {
       content_html: marked(req.body.content),
       created: created
     };
-    pageDao.update(req.body.old_slug, page, function (err, result) {
+    pageDao.update(req.body.page_id, page, function (err, result) {
       if (!err)
-        res.redirect('/admin/page/edit/' + page.slug + "?msg=success");
+        res.redirect('/admin/page/edit/' + req.body.page_id + "?msg=success");
     });
   }
 };

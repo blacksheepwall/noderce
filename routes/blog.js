@@ -97,9 +97,9 @@ exports.post = function (req, res, next) {
   });
 };
 
-// URL: /page/id
+// URL: /page/slug
 exports.page = function (req, res, next) {
-  pageDao.get({'id': req.params.id}, function (err, page) {
+  pageDao.get({'slug': req.params.slug}, function (err, page) {
     if (!err && page != null) {
       page.content = marked(page.content);
       //如果不存在 content_html，更新

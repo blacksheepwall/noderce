@@ -13,7 +13,7 @@ module.exports = function (app) {
   app.get(/^\/p\/(\d+)$/, blog.index);
   app.get('/feed', blog.feed);
   app.get('/archives', blog.archives);
-  app.get('/page/:id', blog.page);
+  app.get('/page/:slug', blog.page);
   app.post('/comment', blog.comment);
 
   app.get('/tag/:tag', blog.tag);
