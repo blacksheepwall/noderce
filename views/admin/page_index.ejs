@@ -12,18 +12,18 @@
       <li><a href="/admin">Home</a><span> ›</span></li>
       <li><a href="/admin/page">Page Index</a></li>
     </ul>
-    <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
+    <div class="quick"><a href="/admin/page/write" title="Write Page"><span>Write</span></a></div>
   </div>
   <div id="post-list">
     <ul>
       <% page_list.forEach(function(item){ %>
       <li>
         <a href='/admin/page/edit/<%=item.id%>'><%=item.title%></a>
-
         <div class='action'>
-              <span class='edit'>
-                <a href='/page/<%=item.slug%>' target='_blank'>view</a>
-              </span>
+          <span class='edit'>
+            <a href='/page/<%=item.slug%>' target='_blank'>view</a>
+            <a href='/admin/page/delete/<%=item.id%>'>x</a>
+          </span>
         </div>
       </li>
       <% }); %>

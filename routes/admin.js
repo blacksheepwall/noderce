@@ -167,6 +167,17 @@ exports.pageEdit = function (req, res) {
   }
 };
 
+// URL : /admin/page/delete
+exports.pageDelete = function(req, res) {
+  if (req.method == "GET") {
+    pageDao.deleteById(req.params.id, function(err, result) {
+      if (!err) {
+        res.redirect("/admin/page");
+      }
+    });
+  }
+};
+
 exports.commentIndex = function (req, res) {
   var limit = 100;
   var status = req.query['status'];

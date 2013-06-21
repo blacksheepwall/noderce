@@ -125,7 +125,7 @@ exports.comment = function (req, res, next) {
   //这是一个隐藏的input，如果有值，说明是垃圾评论机器人
   var no_author = req.body.author;
 
-  if (id == "" || slug == "" || !req.headers['referer'] || req.headers['referer'].indexOf(slug) <= 0) {
+  if (id == "" || slug == "" || !req.headers['referer'] || req.headers['referer'].indexOf(id) <= 0) {
     return res.redirect("/fuck-spam-comment");
   } else if (no_author !== "") {
     console.log("no_author not is empty");

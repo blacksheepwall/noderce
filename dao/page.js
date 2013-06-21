@@ -30,3 +30,9 @@ exports.update = function (old_slug, page, callback) {
     callback(err, result);
   })
 };
+
+exports.deleteById = function (id, callback) {
+    db.page.remove({id: id}, function (err, result) {
+        callback(err, result);
+    });
+};
