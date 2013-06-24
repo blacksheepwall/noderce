@@ -21,8 +21,9 @@ var config = {
 };
 
 config.akismet_options = {
-  apikey: '', // akismet api key，不启用 akismet 请设置为空
-  blog: config.url // required: your root level url
+  apikey: 'c28ea9690585', // akismet api key，不启用 akismet 请设置为空
+  // 公用 API Key
+  blog: config.url || '/' // required: your root level url
 };
 
 // Feed Config

@@ -25,8 +25,8 @@ exports.insert = function (obj, callback) {
   });
 };
 
-exports.update = function (old_slug, page, callback) {
-  db.page.update({slug:old_slug}, {$set:page }, function (err, result) {
+exports.update = function (id, page, callback) {
+  db.page.update({id:id}, {$set:page }, function (err, result) {
     callback(err, result);
   })
 };

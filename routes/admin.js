@@ -13,7 +13,7 @@ var commentDao = require('../dao/comment.js');
 var dateFormat = require('dateformat');
 var marked = require('marked');
 
-var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey, debug: true});
+var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey/*, debug: true*/});
 
 //URL: /admin
 exports.index = function (req, res) {
@@ -154,6 +154,7 @@ exports.pageEdit = function (req, res) {
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
 
     var page = {
+      id: req.body.page_id,
       title: req.body.title,
       slug: req.body.slug,
       content: req.body.content,
@@ -197,11 +198,8 @@ exports.commentDelete = function (req, res) {
 
 
 exports.verifyAkismet = function (req, res) {
-  akismet.verifyKey(function (err, verified) {
-    if (verified)
-      res.render('admin/verifyAkismet', {layout: false, status: true});
-    else
-      res.render('admin/verifyAkismet', {layout: false, status: false});
+  akismet.verifyKey(function(err, verified) {
+    res.render('admin/verifyAkismet', {layout: false, status: !!verified});
   });
 };
 
