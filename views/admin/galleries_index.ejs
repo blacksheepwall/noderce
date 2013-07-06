@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>Noderce 管理中心</title>
+    <link rel="stylesheet" href="/admin/assets/style.css"/>
+    <script src="/libs/jquery.min.js"></script>
+    <script src="/libs/cal.js"></script>
+    <script src="/libs/pagedown/Markdown.Converter.js"></script>
+    <script src="/libs/pagedown/Markdown.Sanitizer.js"></script>
+    <script src="/libs/pagedown/Markdown.Editor.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="nav">
+        <ul>
+            <li><a href="/admin">后台首页</a><span> ›</span></li>
+            <li><a href="/admin/galleries">Galleries相片列表</a></li>
+        </ul>
+        <div class="quick"><a href="/admin/galleries/write"><span>创建Galleries相片</span></a></div>
+    </div>
+    <ul class="photo-list clearfix">
+        <% photos.forEach(function(item){ %>
+        <li class="photo-item">
+            <a href="/admin/galleries/edit/<%=item.photo_id%>">
+                <img src="<%=item.preview_url%>" alt="<%=item.title%>" onerror="this.src='http://r.ph.126.net/image/default/duser.png'"/>
+            </a>
+            <p><%=item.title%></p>
+        </li>
+        <% }); %>
+    </ul>
+</div>
+</body>
+</html>

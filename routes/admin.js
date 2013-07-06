@@ -10,6 +10,7 @@ var userDao = require('../dao/user.js');
 var postDao = require('../dao/post.js');
 var pageDao = require('../dao/page.js');
 var commentDao = require('../dao/comment.js');
+var galleriesDao = require('../dao/galleries.js');
 var dateFormat = require('dateformat');
 var marked = require('marked');
 
@@ -228,6 +229,71 @@ exports.submitSpam = function (req, res) {
     }
     res.redirect("/admin/comment");
   });
+};
+
+exports.galleriesIndex = function(req, res) {
+  var limit = 999;
+  galleriesDao.all({}, limit, function(err, photos) {
+    res.render('admin/galleries_index', {layout: false, photos: photos});
+  });
+};
+
+exports.galleriesEdit = function(req, res) {
+  if (req.method == "GET") {
+    var id = req.params.photo_id;
+    if (id) {
+      galleriesDao.findByPhotoId(id, function(err, photo) {
+        if (photo != null)
+          res.render('admin/galleries_edit', {layout: false, photo: photo});
+        else
+          res.redirect('/admin/galleries');
+      });
+    } else {
+      res.render('admin/galleries_edit', {layout: false});
+    }
+  } else if (req.method == "POST") {
+//    var created = dateFormat(new Date(), "yyyy-mm-dd");
+//    if (req.body.created)
+//      created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
+    var photo = {
+      photo_id: req.body.photo_id,
+      title: req.body.title,
+      raw_url: req.body.raw_url,
+      preview_url: req.body.preview_url,
+      description: req.body.description
+    };
+    galleriesDao.updateByPhotoId(req.body.photo_id, photo, function(err, result) {
+      if (!err)
+        res.redirect('/admin/galleries');
+//        res.redirect('/admin/galleries/edit/' + req.body.photo_id + "?msg=success");
+    });
+  }
+};
+
+exports.galleriesWrite = function(req, res) {
+  if (req.method == 'GET') {//render post write view
+    res.render('admin/galleries_write', {layout: false});
+  } else if (req.method == 'POST') {// POST a post
+    var created = dateFormat(new Date(), "yyyy-mm-dd");
+    if (req.body.created)
+      created = dateFormat(new Date(req.body.created), "yyyy-mm-dd")
+    var photo = {
+      photo_id: +new Date() + '',
+      title: req.body.title,
+      raw_url: req.body.raw_url,
+      preview_url: req.body.preview_url,
+      description: req.body.description,
+      created: created
+    };
+    galleriesDao.insert(photo, function(err, result) {
+      if (!err) {
+//        res.redirect('/admin/galleries/edit/' + photo.photo_id);
+        res.redirect('/admin/galleries');
+      } else {
+        console.log(err);
+      }
+    });
+  }
 };
 
 

@@ -4,6 +4,18 @@ html {
   background: #FFF
 }
 
+.clearfix:after {
+  clear: both;
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+.clearfix {
+  zoom: 1;
+}
+
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {
   margin: 0;
   padding: 0
@@ -20,7 +32,6 @@ fieldset, img {
 
 address, caption, cite, code, dfn, em, strong, th, var {
   font-style: normal;
-  font-weight: normal
 }
 
 ol, ul {
@@ -636,4 +647,28 @@ button.btn-small a {
 #comment-status a.current:hover {
   background: #445;
   color: #fff;
+}
+
+.photo-list {
+  padding: 10px;
+}
+
+.photo-list .photo-item {
+  float: left;
+  width: 145px;
+  height: 220px;
+  margin-right: 20px;
+}
+
+.photo-list .photo-item img {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.photo-list .photo-body input[type="button"] {
+  padding: 2px 10px;
+}
+
+.photo-list .photo-url {
+  width: 300px;
 }

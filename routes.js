@@ -46,7 +46,11 @@ module.exports = function (app) {
   app.get('/admin/comment/delete/:id', admin.auth_user, admin.commentDelete);
   app.get('/admin/verifyAkismet', admin.auth_user, admin.verifyAkismet);
   app.get('/admin/submitSpam/:id', admin.auth_user, admin.submitSpam);
-
+  app.get('/admin/galleries', admin.auth_user, admin.galleriesIndex);
+  app.get('/admin/galleries/edit/:photo_id', admin.auth_user, admin.galleriesEdit);
+  app.post('/admin/galleries/edit/:photo_id', admin.auth_user, admin.galleriesEdit);
+  app.get('/admin/galleries/write', admin.auth_user, admin.galleriesWrite);
+  app.post('/admin/galleries/write', admin.auth_user, admin.galleriesWrite);
 
   app.get('*', blog.pageNotFound);
 };

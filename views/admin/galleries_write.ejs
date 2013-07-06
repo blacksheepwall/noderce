@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>Noderce 管理中心</title>
+    <link rel="stylesheet" href="/admin/assets/style.css"/>
+    <script src="/libs/jquery.min.js"></script>
+    <script src="/libs/cal.js"></script>
+    <script src="/libs/pagedown/Markdown.Converter.js"></script>
+    <script src="/libs/pagedown/Markdown.Sanitizer.js"></script>
+    <script src="/libs/pagedown/Markdown.Editor.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="nav">
+        <ul>
+            <li><a href="/admin">后台首页</a><span> ›</span></li>
+            <li><a href="/admin/galleries">Galleries相片列表</a><span> ›</span></li>
+            <li><a href="/admin/galleries/write">创建相片</a></li>
+        </ul>
+    </div>
+    <div class="photo-list">
+        <form class="photo-body" method='post'>
+            <fieldset>
+                <legend>设置相片路径：</legend>
+                标题 <input type="text" name="title"/>
+                原图地址 <input type="text" class="photo-url" name="raw_url"/>
+                缩略图地址 <input type="text" class="photo-url" name="preview_url"/>
+                <input type="hidden" name="photo_id"/>
+                <input type="submit" value="保存"/>
+            </fieldset>
+        </form>
+    </div>
+</div>
+</body>
+</html>
