@@ -13,11 +13,11 @@
 <div id="wrapper">
   <div id="nav">
     <ul>
-      <li><a href="/admin">Home</a><span> ›</span></li>
-      <li><a href="/admin/page">Page Index</a><span> ›</span></li>
+      <li><a href="/admin">后台首页</a><span> ›</span></li>
+      <li><a href="/admin/page">页面列表</a><span> ›</span></li>
       <li><a href="/admin/page/edit/<%=page.slug%>"><%=page.title%></a><span> ›</span></li>
     </ul>
-    <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
+    <div class="quick"><a href="/admin/page/write"><span>创建新页面</span></a></div>
   </div>
   <form id='write_post' method='post'>
     <div id='post_info'>

@@ -40,7 +40,7 @@ module.exports = function (app) {
   app.post('/admin/page/write', admin.auth_user, admin.pageWrite);
   app.get('/admin/page/edit/:id', admin.auth_user, admin.pageEdit);
   app.post('/admin/page/edit/:id', admin.auth_user, admin.pageEdit);
-  app.post('/admin/page/delete/:id', admin.auth_user, admin.pageDelete);
+  app.get('/admin/page/delete/:id', admin.auth_user, admin.pageDelete);
 
   app.get('/admin/comment', admin.auth_user, admin.commentIndex);
   app.get('/admin/comment/delete/:id', admin.auth_user, admin.commentDelete);
