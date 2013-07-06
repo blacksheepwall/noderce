@@ -67,13 +67,13 @@
     var editor = new Markdown.Editor(converter);
     editor.run();
 
-    window.onbeforeunload = function(){
-      return '你正在编辑日志，确定不保存编辑内容吗？';
-    };
-
-    $("#post-it").click(function(){
-      window.onbeforeunload = null;
-    });
+//    window.onbeforeunload = function(){
+//      return '你正在编辑日志，确定不保存编辑内容吗？';
+//    };
+//
+//    $("#post-it").click(function(){
+//      window.onbeforeunload = null;
+//    });
 
   })();
 </script>

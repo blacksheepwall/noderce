@@ -3,6 +3,10 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
   padding: 0
 }
 
+body {
+  overflow-y: scroll;
+}
+
 table {
   border-collapse: collapse;
   border-spacing: 0
@@ -253,13 +257,14 @@ pre code {
   margin-bottom: 5px;
   font-weight: bold;
   font-size: 1.8em;
-  font-family: Pmingliu, Mingliu;
+  /*font-family: Pmingliu, Mingliu;*/
   line-height: 1em;
 }
 
 #main.page h1.title, #main.post h1.title, #main.tags h1.title {
   padding-bottom: 15px;
   padding-left: 20px;
+  font-family: "Terminal Dosis", Arial, Helvetica, Geneva, sans-serif;
 }
 
 #main .post .meta {

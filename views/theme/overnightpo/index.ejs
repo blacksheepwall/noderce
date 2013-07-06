@@ -1,5 +1,5 @@
 <section id="main" class="container">
-  <section class="posts block">
+  <section class="posts">
     <%posts.forEach(function(item){%>
     <article class="post">
       <h2 class="title">
@@ -13,7 +13,7 @@
     </article>
     <%})%>
   </section>
-  <div id="navigation">
+  <div id="navigation" style="display:none;">
     <table width='100%'>
       <tbody>
       <tr>
@@ -40,7 +40,7 @@
       </tbody>
     </table>
   </div>
-  <div class="sidebar block">
+  <div class="sidebar block" style="display:none;">
     <div class="widget about">
       <strong class="wt">关于我</strong>
       <div class="wc">
