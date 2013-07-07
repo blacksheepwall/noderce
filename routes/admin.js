@@ -10,7 +10,7 @@ var userDao = require('../dao/user.js');
 var postDao = require('../dao/post.js');
 var pageDao = require('../dao/page.js');
 var commentDao = require('../dao/comment.js');
-var galleriesDao = require('../dao/galleries.js');
+var photoDao = require('../dao/photo.js');
 var dateFormat = require('dateformat');
 var marked = require('marked');
 
@@ -231,25 +231,25 @@ exports.submitSpam = function (req, res) {
   });
 };
 
-exports.galleriesIndex = function(req, res) {
+exports.photoIndex = function(req, res) {
   var limit = 999;
-  galleriesDao.all({}, limit, function(err, photos) {
-    res.render('admin/galleries_index', {layout: false, photos: photos});
+  photoDao.all({}, limit, function(err, photos) {
+    res.render('admin/photo_index', {layout: false, photos: photos});
   });
 };
 
-exports.galleriesEdit = function(req, res) {
+exports.photoEdit = function(req, res) {
   if (req.method == "GET") {
     var id = req.params.photo_id;
     if (id) {
-      galleriesDao.findByPhotoId(id, function(err, photo) {
+      photoDao.findByPhotoId(id, function(err, photo) {
         if (photo != null)
-          res.render('admin/galleries_edit', {layout: false, photo: photo});
+          res.render('admin/photo_edit', {layout: false, photo: photo});
         else
-          res.redirect('/admin/galleries');
+          res.redirect('/admin/photo');
       });
     } else {
-      res.render('admin/galleries_edit', {layout: false});
+      res.render('admin/photo_edit', {layout: false});
     }
   } else if (req.method == "POST") {
 //    var created = dateFormat(new Date(), "yyyy-mm-dd");
@@ -262,17 +262,17 @@ exports.galleriesEdit = function(req, res) {
       preview_url: req.body.preview_url,
       description: req.body.description
     };
-    galleriesDao.updateByPhotoId(req.body.photo_id, photo, function(err, result) {
+    photoDao.updateByPhotoId(req.body.photo_id, photo, function(err, result) {
       if (!err)
-        res.redirect('/admin/galleries');
-//        res.redirect('/admin/galleries/edit/' + req.body.photo_id + "?msg=success");
+        res.redirect('/admin/photo');
+//        res.redirect('/admin/photo/edit/' + req.body.photo_id + "?msg=success");
     });
   }
 };
 
-exports.galleriesWrite = function(req, res) {
+exports.photoWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
-    res.render('admin/galleries_write', {layout: false});
+    res.render('admin/photo_write', {layout: false});
   } else if (req.method == 'POST') {// POST a post
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
@@ -285,10 +285,10 @@ exports.galleriesWrite = function(req, res) {
       description: req.body.description,
       created: created
     };
-    galleriesDao.insert(photo, function(err, result) {
+    photoDao.insert(photo, function(err, result) {
       if (!err) {
-//        res.redirect('/admin/galleries/edit/' + photo.photo_id);
-        res.redirect('/admin/galleries');
+//        res.redirect('/admin/photo/edit/' + photo.photo_id);
+        res.redirect('/admin/photo');
       } else {
         console.log(err);
       }

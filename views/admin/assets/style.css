@@ -672,3 +672,15 @@ button.btn-small a {
 .photo-list .photo-url {
   width: 300px;
 }
+
+.photo-list .form-item {
+  margin-bottom: 10px;
+}
+
+.photo-list .form-item input {
+  width: 700px;
+}
+
+.photo-list .form-save {
+  padding: 4px 10px;
+}
