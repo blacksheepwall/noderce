@@ -248,8 +248,6 @@ exports.archives = function(req, res) {
 exports.pageNotFound = function(req, res) {
   console.log('404 handler, URL' + req.originalUrl);
   res.render('theme/' + config.theme + '/404', {
-    layout: false,
-    status: 404,
-    title: 'NodeBlog'
+    layout: true, status: 404, title: '页面未找到 - 404'
   });
 };

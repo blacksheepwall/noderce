@@ -1,13 +1,6 @@
-/**
- * User: willerce
- * Date: 7/24/12
- * Time: 9:13 PM
- */
-
 var mongoskin = require('mongoskin');
 
 var config = {
-
   //site settings
   name: '未志',
   version: '0.0.3',

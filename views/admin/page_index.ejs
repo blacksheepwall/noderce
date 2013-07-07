@@ -1,35 +1,23 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <title>Noderce 管理中心</title>
-  <link rel="stylesheet" href="/admin/assets/style.css">
-  <script src="/libs/jquery.min.js"></script>
-</head>
-<body>
-<div id="wrapper">
-  <div id="nav">
-    <ul>
-      <li><a href="/admin">后台首页</a><span> ›</span></li>
-      <li><a href="/admin/page">页面列表</a></li>
-    </ul>
-    <div class="quick"><a href="/admin/page/write" title="创建页面"><span>创建页面</span></a></div>
-  </div>
-  <div id="post-list">
-    <ul>
-      <% page_list.forEach(function(item){ %>
-      <li>
-        <a href='/admin/page/edit/<%=item.id%>'><%=item.title%></a>
-        <div class='action'>
-          <span class='edit'>
-            <a href='/page/<%=item.slug%>' target='_blank'>view</a>
-            <a href='/admin/page/delete/<%=item.id%>'>x</a>
-          </span>
-        </div>
-      </li>
-      <% }); %>
-    </ul>
-  </div>
-  <div class='clearfix'></div>
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/page">页面列表</a></li>
+  </ul>
+  <div class="quick"><a href="/admin/page/write" title="创建页面"><span>创建页面</span></a></div>
 </div>
-</body>
-</html>
+<div id="post-list">
+  <ul>
+    <% page_list.forEach(function(item){ %>
+    <li>
+      <a href='/admin/page/edit/<%=item.id%>'><%=item.title%></a>
+
+      <div class='action'>
+          <span class='edit'>
+            <a href='/page/<%=item.slug%>' target='_blank'>预览</a>
+            <a href='/admin/page/delete/<%=item.id%>'>删除</a>
+          </span>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+</div>

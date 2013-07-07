@@ -10,19 +10,19 @@ var marked = require('marked');
 var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey/*, debug: true*/});
 //URL: /admin
 exports.index = function(req, res) {
-  res.render('admin/index', {layout: false});
+  res.render('admin/index', {layout: true});
 };
 // URL: /admin/post
 exports.postIndex = function(req, res) {
   postDao.all(function(err, result) {
     if (!err)
-      res.render('admin/post_index', {layout: false, post_list: result});
+      res.render('admin/post_index', {layout: true, post_list: result, title: '日志列表'});
   });
 };
 // URL : /admin/post/write
 exports.postWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
-    res.render('admin/post_write', {layout: false});
+    res.render('admin/post_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
@@ -51,7 +51,7 @@ exports.postEdit = function(req, res) {
     var id = req.params.id;
     postDao.get({'id': id}, function(err, post) {
       if (post != null)
-        res.render('admin/post_edit', {layout: false, post: post});
+        res.render('admin/post_edit', {layout: true, post: post});
       else
         res.redirect('/admin/post')
     })
@@ -87,13 +87,13 @@ exports.postDelete = function(req, res) {
 exports.pageIndex = function(req, res) {
   pageDao.all(function(err, result) {
     if (!err)
-      res.render('admin/page_index', {layout: false, page_list: result});
+      res.render('admin/page_index', {layout: true, page_list: result});
   });
 };
 // URL : /admin/page/write
 exports.pageWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
-    res.render('admin/page_write', {layout: false});
+    res.render('admin/page_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
@@ -121,7 +121,7 @@ exports.pageEdit = function(req, res) {
     var id = req.params.id;
     pageDao.get({id: id}, function(err, page) {
       if (page != null)
-        res.render('admin/page_edit', {layout: false, page: page});
+        res.render('admin/page_edit', {layout: true, page: page});
       else
         res.redirect('/admin/page')
     })
@@ -159,7 +159,7 @@ exports.commentIndex = function(req, res) {
   if (!status) status = '1';
   commentDao.all({status: status}, limit, function(err, comments) {
     postDao.all(function(err, posts) {
-      res.render('admin/comment_index', {layout: false, comment_list: comments, posts: posts, status: status});
+      res.render('admin/comment_index', {layout: true, comment_list: comments, posts: posts, status: status});
     });
   })
 };
@@ -170,7 +170,7 @@ exports.commentDelete = function(req, res) {
 };
 exports.verifyAkismet = function(req, res) {
   akismet.verifyKey(function(err, verified) {
-    res.render('admin/verifyAkismet', {layout: false, status: !!verified});
+    res.render('admin/verifyAkismet', {layout: true, status: !!verified});
   });
 };
 exports.submitSpam = function(req, res) {
@@ -202,7 +202,7 @@ exports.submitSpam = function(req, res) {
 exports.photoIndex = function(req, res) {
   var limit = 999;
   photoDao.all({}, limit, function(err, photos) {
-    res.render('admin/photo_index', {layout: false, photos: photos});
+    res.render('admin/photo_index', {layout: true, photos: photos});
   });
 };
 exports.photoEdit = function(req, res) {
@@ -211,12 +211,12 @@ exports.photoEdit = function(req, res) {
     if (id) {
       photoDao.findByPhotoId(id, function(err, photo) {
         if (photo != null)
-          res.render('admin/photo_edit', {layout: false, photo: photo});
+          res.render('admin/photo_edit', {layout: true, photo: photo});
         else
           res.redirect('/admin/photo');
       });
     } else {
-      res.render('admin/photo_edit', {layout: false});
+      res.render('admin/photo_edit', {layout: true});
     }
   } else if (req.method == "POST") {
 //    var created = dateFormat(new Date(), "yyyy-mm-dd");
@@ -238,7 +238,7 @@ exports.photoEdit = function(req, res) {
 };
 exports.photoWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
-    res.render('admin/photo_write', {layout: false});
+    res.render('admin/photo_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
@@ -264,7 +264,7 @@ exports.photoWrite = function(req, res) {
 //URL: /admin/login
 exports.login = function(req, res) {
   if (req.method == "GET") {
-    res.render("admin/login", {layout: false});
+    res.render("admin/login", {layout: true});
   } else if (req.method == "POST") {
     var name = req.body.name.trim();
     var pass = req.body.pass.trim();
