@@ -4,15 +4,13 @@ var marked = require('marked');
 var dateFormat = require('dateformat');
 var gravatar = require('gravatar');
 var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey});
-
+var photoDao = require('../dao/photo');
 var postDao = require('../dao/post');
 var pageDao = require('../dao/page');
 var commentDao = require('../dao/comment');
-
-
 // URL /
-exports.index = function (req, res, next) {
-  postDao.count({}, function (err, count) {
+exports.index = function(req, res, next) {
+  postDao.count({}, function(err, count) {
     if (count == 0) {
       res.redirect("/admin/install");
     }
@@ -23,16 +21,13 @@ exports.index = function (req, res, next) {
     var title = config.name;
     if (currentPage > 1)
       title += " › 第" + currentPage + "页";
-
     //skin，即起始位置
     var start = ( currentPage - 1) * config.postNum;
-
     if (maxPage < currentPage)
       return;
     else if (maxPage > currentPage)
       nextPage = parseInt(currentPage) + 1;
-
-    postDao.findAll(start, parseInt(config.postNum), function (err, result) {
+    postDao.findAll(start, parseInt(config.postNum), function(err, result) {
       for (var i = 0; i < result.length; i++) {
         result[i].content = marked(result[i].content);
         if (result[i].content.indexOf('<!--more-->') > 0) {
@@ -44,11 +39,9 @@ exports.index = function (req, res, next) {
     });
   });
 };
-
-
 // URL /tag/*
-exports.tag = function (req, res, next) {
-  postDao.findByTag(req.params.tag, function (err, result) {
+exports.tag = function(req, res, next) {
+  postDao.findByTag(req.params.tag, function(err, result) {
     if (err) return;
     for (var i = 0; i < result.length; i++) {
       result[i].content = marked(result[i].content);
@@ -57,11 +50,9 @@ exports.tag = function (req, res, next) {
     res.render('theme/' + config.theme + '/tag', tag_obj);
   });
 };
-
-
 // URL: /post/id
-exports.post = function (req, res, next) {
-  postDao.get({id: req.params.id}, function (err, post) {
+exports.post = function(req, res, next) {
+  postDao.get({id: req.params.id}, function(err, post) {
     if (err) {
       res.statusCode = 500;
       res.send('500');
@@ -72,17 +63,15 @@ exports.post = function (req, res, next) {
       //如果不存在 content_html，更新
       if (!post.content_html) {
         post.content_html = marked(post.content);
-        postDao.update(post.id, {content_html: post.content_html}, function () {
+        postDao.update(post.id, {content_html: post.content_html}, function() {
         })
       }
       var page_title = config.name + " › " + post.title;
-
-      commentDao.findByPostId(post.id, function (err, comments) {
-
+      commentDao.findByPostId(post.id, function(err, comments) {
         for (var i = 0; i < comments.length; i++) {
           if (!comments[i].avatar) {
             comments[i].avatar = gravatar.url(comments[i].email, {s: '36', r: 'pg', d: 'mm'});
-            commentDao.updateAvater(comments[i]._id.toString(), comments[i].avatar, function () {
+            commentDao.updateAvater(comments[i]._id.toString(), comments[i].avatar, function() {
             })
           }
         }
@@ -96,16 +85,15 @@ exports.post = function (req, res, next) {
     }
   });
 };
-
 // URL: /page/slug
-exports.page = function (req, res, next) {
-  pageDao.get({'slug': req.params.slug}, function (err, page) {
+exports.page = function(req, res, next) {
+  pageDao.get({'slug': req.params.slug}, function(err, page) {
     if (!err && page != null) {
       page.content = marked(page.content);
       //如果不存在 content_html，更新
       if (!page.content_html) {
         page.content_html = marked(page.content);
-        pageDao.update(page.id, {content_html: page.content_html}, function () {
+        pageDao.update(page.id, {content_html: page.content_html}, function() {
         })
       }
       page.page_title = config.name + " › " + page.title;
@@ -116,22 +104,19 @@ exports.page = function (req, res, next) {
     }
   });
 };
-
 // POST URL: /comment
-exports.comment = function (req, res, next) {
+exports.comment = function(req, res, next) {
   var id = req.body.id;
   var slug = req.body.slug;
-
   //这是一个隐藏的input，如果有值，说明是垃圾评论机器人
   var no_author = req.body.author;
-
   if (id == "" || slug == "" || !req.headers['referer'] || req.headers['referer'].indexOf(id) <= 0) {
     return res.redirect("/fuck-spam-comment");
   } else if (no_author !== "") {
     console.log("no_author not is empty");
     return res.redirect("/fuck-spam-comment");
   } else {
-    postDao.get({id: id}, function (err, post) {
+    postDao.get({id: id}, function(err, post) {
       if (!err && post != null) {
         var comment = {
           post_id: req.body.id,
@@ -144,12 +129,10 @@ exports.comment = function (req, res, next) {
           created: dateFormat(new Date(), "isoDateTime"),
           status: "1"//状态： 1：正常，0：SPAM
         };
-
         // 非空检查
         if (comment.author == "" || comment.email == "" || comment.content == "") {
           return res.redirect("/post/" + post.id);
         }
-
         // URL 格式检查
         var regexp = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w\- ./?%&=]*)?/;
         if (!comment.url.match(regexp)) {
@@ -158,9 +141,8 @@ exports.comment = function (req, res, next) {
             delete comment.url;
           }
         }
-
         comment.avatar = gravatar.url(comment.email, {s: '36', r: 'pg', d: 'mm'});
-        commentDao.insert(comment, function (err, comment) {
+        commentDao.insert(comment, function(err, comment) {
           if (!err && comment && comment.length == 1) {
             //配置了 akismet key 而且不为空时，进行 akismet spam检查
             if (config.akismet_options && config.akismet_options.apikey != "") {
@@ -172,12 +154,12 @@ exports.comment = function (req, res, next) {
                 comment_author_email: comment[0].email,
                 comment_author_url: comment[0].url,
                 comment_type: "comment"
-              }, function (err, spam) {
+              }, function(err, spam) {
                 //发现SPAM
                 if (spam) {
                   console.log('Spam caught.');
                   comment[0].status = "0";//状态： 1：正常，0：SPAM
-                  commentDao.save(comment[0], function (err, result) {
+                  commentDao.save(comment[0], function(err, result) {
                     if (!err)
                       console.log("save comment status success");
                     else
@@ -195,15 +177,13 @@ exports.comment = function (req, res, next) {
     });
   }
 };
-
 // URL: /feed
-exports.feed = function (req, res) {
+exports.feed = function(req, res) {
   if (!config.rss) {
     res.statusCode = 404;
     res.send('Please set `rss` in config.js');
   }
-
-  postDao.findAll(0, parseInt(config.rss.max_rss_items), function (err, result) {
+  postDao.findAll(0, parseInt(config.rss.max_rss_items), function(err, result) {
     if (err) {
       return next(err);
     }
@@ -220,11 +200,9 @@ exports.feed = function (req, res) {
         item: []
       }
     };
-
     for (var i = 0; i < result.length; i++) {
       var post = result[i];
       post.content = marked(post.content);
-
       rss_obj.channel.item.push({
         title: post.title,
         author: {
@@ -242,14 +220,20 @@ exports.feed = function (req, res) {
     res.send(rss_content);
   });
 };
-
+// URL: /photo
+exports.photo = function(req, res) {
+  var limit = 999;
+  photoDao.all({}, limit, function(err, photos) {
+    res.render('theme/' + config.theme + '/photo', {title: config.name + " › 相片列表", photos: photos, name: config.name});
+  });
+};
 // URL: /archive
-exports.archives = function (req, res) {
-  var sortNumber = function (a, b) {
+exports.archives = function(req, res) {
+  var sortNumber = function(a, b) {
     return a.year < b.year
   };
   var archiveList = [];
-  postDao.all(function (err, archives) {
+  postDao.all(function(err, archives) {
     for (var i = 0; i < archives.length; i++) {
       var year = new Date(archives[i].created).getFullYear();
       if (archiveList[year] === undefined)
@@ -260,9 +244,8 @@ exports.archives = function (req, res) {
     res.render('theme/' + config.theme + '/archives', {title: config.name + " › 文章存档", archives: archiveList, name: config.name});
   });
 };
-
 // URL: /404
-exports.pageNotFound = function (req, res) {
+exports.pageNotFound = function(req, res) {
   console.log('404 handler, URL' + req.originalUrl);
   res.render('theme/' + config.theme + '/404', {
     layout: false,

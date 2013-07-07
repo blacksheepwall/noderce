@@ -1,9 +1,3 @@
-/**
- * User: willerce
- * Date: 7/30/12
- * Time: 11:47 PM
- */
-
 var util = require('../lib/util.js');
 var config = require('../config.js').config;
 var userDao = require('../dao/user.js');
@@ -13,32 +7,26 @@ var commentDao = require('../dao/comment.js');
 var photoDao = require('../dao/photo.js');
 var dateFormat = require('dateformat');
 var marked = require('marked');
-
 var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey/*, debug: true*/});
-
 //URL: /admin
-exports.index = function (req, res) {
+exports.index = function(req, res) {
   res.render('admin/index', {layout: false});
 };
-
 // URL: /admin/post
-exports.postIndex = function (req, res) {
+exports.postIndex = function(req, res) {
   postDao.all(function(err, result) {
     if (!err)
       res.render('admin/post_index', {layout: false, post_list: result});
   });
 };
-
 // URL : /admin/post/write
-exports.postWrite = function (req, res) {
+exports.postWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/post_write', {layout: false});
   } else if (req.method == 'POST') {// POST a post
-
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
-
     var post = {
       id: +new Date() + '',
       title: req.body.title,
@@ -48,8 +36,7 @@ exports.postWrite = function (req, res) {
       created: created,
       tags: req.body.tags.split(',')
     };
-
-    postDao.insert(post, function (err, result) {
+    postDao.insert(post, function(err, result) {
       if (!err) {
         res.redirect('/admin/post/edit/' + post.id);
       } else {
@@ -58,23 +45,20 @@ exports.postWrite = function (req, res) {
     });
   }
 };
-
 // URL : /admin/post/edit
-exports.postEdit = function (req, res) {
+exports.postEdit = function(req, res) {
   if (req.method == "GET") {
     var id = req.params.id;
-    postDao.get({'id': id}, function (err, post) {
+    postDao.get({'id': id}, function(err, post) {
       if (post != null)
         res.render('admin/post_edit', {layout: false, post: post});
       else
         res.redirect('/admin/post')
     })
   } else if (req.method == "POST") {
-
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
-
     var post = {
       title: req.body.title,
       slug: req.body.slug,
@@ -83,15 +67,14 @@ exports.postEdit = function (req, res) {
       created: created,
       tags: req.body.tags.split(',')
     };
-    postDao.update(req.body.post_id, post, function (err) {
+    postDao.update(req.body.post_id, post, function(err) {
       if (!err) {
         res.redirect('/admin/post/edit/' + req.body.post_id + "?msg=success");
       }
     });
   }
 };
-
-exports.postDelete = function (req, res) {
+exports.postDelete = function(req, res) {
   if (req.method == "GET") {
     postDao.deleteById(req.params.id, function(err, result) {
       if (!err) {
@@ -100,25 +83,21 @@ exports.postDelete = function (req, res) {
     });
   }
 };
-
 // URL: /admin/page
-exports.pageIndex = function (req, res) {
-  pageDao.all(function (err, result) {
+exports.pageIndex = function(req, res) {
+  pageDao.all(function(err, result) {
     if (!err)
       res.render('admin/page_index', {layout: false, page_list: result});
   });
 };
-
 // URL : /admin/page/write
-exports.pageWrite = function (req, res) {
+exports.pageWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/page_write', {layout: false});
   } else if (req.method == 'POST') {// POST a post
-
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd")
-
     var page = {
       id: +new Date() + '',
       title: req.body.title,
@@ -127,8 +106,7 @@ exports.pageWrite = function (req, res) {
       content_html: marked(req.body.content),
       created: created
     };
-
-    pageDao.insert(page, function (err, result) {
+    pageDao.insert(page, function(err, result) {
       if (!err) {
         res.redirect('/admin/page/edit/' + page.id);
       } else {
@@ -137,23 +115,20 @@ exports.pageWrite = function (req, res) {
     });
   }
 };
-
 // URL : /admin/page/edit
-exports.pageEdit = function (req, res) {
+exports.pageEdit = function(req, res) {
   if (req.method == "GET") {
     var id = req.params.id;
-    pageDao.get({id: id}, function (err, page) {
+    pageDao.get({id: id}, function(err, page) {
       if (page != null)
         res.render('admin/page_edit', {layout: false, page: page});
       else
         res.redirect('/admin/page')
     })
   } else if (req.method == "POST") {
-
     var created = dateFormat(new Date(), "yyyy-mm-dd");
     if (req.body.created)
       created = dateFormat(new Date(req.body.created), "yyyy-mm-dd");
-
     var page = {
       id: req.body.page_id,
       title: req.body.title,
@@ -162,13 +137,12 @@ exports.pageEdit = function (req, res) {
       content_html: marked(req.body.content),
       created: created
     };
-    pageDao.update(req.body.page_id, page, function (err, result) {
+    pageDao.update(req.body.page_id, page, function(err, result) {
       if (!err)
         res.redirect('/admin/page/edit/' + req.body.page_id + "?msg=success");
     });
   }
 };
-
 // URL : /admin/page/delete
 exports.pageDelete = function(req, res) {
   if (req.method == "GET") {
@@ -179,33 +153,28 @@ exports.pageDelete = function(req, res) {
     });
   }
 };
-
-exports.commentIndex = function (req, res) {
+exports.commentIndex = function(req, res) {
   var limit = 100;
   var status = req.query['status'];
   if (!status) status = '1';
-  commentDao.all({status: status}, limit, function (err, comments) {
-    postDao.all(function (err, posts) {
+  commentDao.all({status: status}, limit, function(err, comments) {
+    postDao.all(function(err, posts) {
       res.render('admin/comment_index', {layout: false, comment_list: comments, posts: posts, status: status});
     });
   })
 };
-
-exports.commentDelete = function (req, res) {
-  commentDao.deleteById(req.params.id, function (err, result) {
+exports.commentDelete = function(req, res) {
+  commentDao.deleteById(req.params.id, function(err, result) {
     res.redirect("/admin/comment");
   })
 };
-
-
-exports.verifyAkismet = function (req, res) {
+exports.verifyAkismet = function(req, res) {
   akismet.verifyKey(function(err, verified) {
     res.render('admin/verifyAkismet', {layout: false, status: !!verified});
   });
 };
-
-exports.submitSpam = function (req, res) {
-  commentDao.findOne(req.params.id, function (err, comment) {
+exports.submitSpam = function(req, res) {
+  commentDao.findOne(req.params.id, function(err, comment) {
     if (!err) {
       // buggy
       akismet.submitSpam({
@@ -216,10 +185,10 @@ exports.submitSpam = function (req, res) {
         comment_author_url: comment.url,
         comment_type: "comment",
         comment_content: comment.content
-      }, function (err) {
+      }, function(err) {
         console.log('Spam reported to Akismet.');
         comment.status = "0";//状态： 1：正常，0：SPAM
-        commentDao.save(comment, function (err, result) {
+        commentDao.save(comment, function(err, result) {
           if (!err)
             console.log("save comment status success");
           else
@@ -230,14 +199,12 @@ exports.submitSpam = function (req, res) {
     res.redirect("/admin/comment");
   });
 };
-
 exports.photoIndex = function(req, res) {
   var limit = 999;
   photoDao.all({}, limit, function(err, photos) {
     res.render('admin/photo_index', {layout: false, photos: photos});
   });
 };
-
 exports.photoEdit = function(req, res) {
   if (req.method == "GET") {
     var id = req.params.photo_id;
@@ -269,7 +236,6 @@ exports.photoEdit = function(req, res) {
     });
   }
 };
-
 exports.photoWrite = function(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/photo_write', {layout: false});
@@ -295,10 +261,8 @@ exports.photoWrite = function(req, res) {
     });
   }
 };
-
-
 //URL: /admin/login
-exports.login = function (req, res) {
+exports.login = function(req, res) {
   if (req.method == "GET") {
     res.render("admin/login", {layout: false});
   } else if (req.method == "POST") {
@@ -311,9 +275,8 @@ exports.login = function (req, res) {
       });
       return;
     }
-
     //判断用户帐号密码
-    userDao.get(name, function (err, user) {
+    userDao.get(name, function(err, user) {
       if (user) {
         pass = util.md5(pass);
         if (user.password != pass) {
@@ -331,18 +294,16 @@ exports.login = function (req, res) {
     });
   }
 };
-
 //URL: /admin/logout
-exports.logout = function (req, res, next) {
+exports.logout = function(req, res, next) {
   req.session.destroy();
   res.clearCookie(config.auth_cookie_name, {
     path: '/'
   });
   res.redirect('/');
 };
-
 // auth_user middleware
-exports.auth_user = function (req, res, next) {
+exports.auth_user = function(req, res, next) {
   if (req.session.user) {
     return next();
   }
@@ -350,12 +311,10 @@ exports.auth_user = function (req, res, next) {
     var cookie = req.cookies[config.auth_cookie_name];
     if (!cookie)
       return res.redirect('/admin/login');
-
     var auth_token = util.decrypt(cookie, config.session_secret);
     var auth = auth_token.split('\t');
     var user_name = auth[0];
-
-    userDao.get(user_name, function (err, user) {
+    userDao.get(user_name, function(err, user) {
       if (user) {
         req.session.user = user;
         return next();
@@ -366,11 +325,9 @@ exports.auth_user = function (req, res, next) {
     });
   }
 };
-
 // URL:  /install
-exports.install = function (req, res, next) {
-
-  userDao.findAll({}, function (err, result) {
+exports.install = function(req, res, next) {
+  userDao.findAll({}, function(err, result) {
     if (!err) {
       if (result.length > 0) {
         /** 已经初始化过了 ***/
@@ -389,9 +346,8 @@ exports.install = function (req, res, next) {
             name: req.body.name,
             password: util.md5(req.body.password)
           };
-
           //插入一个用户
-          userDao.insert(user, function (err, result) {
+          userDao.insert(user, function(err, result) {
             if (!err) {
 
               //发布一个 Hello World! 的文章
@@ -402,8 +358,7 @@ exports.install = function (req, res, next) {
                 content: "欢迎使用 noderce. 这是程序自动发布的一篇文章。欢迎 fork noderce : https://github.com/willerce/noderce",
                 created: dateFormat(new Date(), "yyyy-mm-dd")
               };
-
-              postDao.insert(post, function (err, result) {
+              postDao.insert(post, function(err, result) {
                 if (!err) {
                   //在 Hello world! 下发表一篇评论
                   var comment = {
@@ -415,12 +370,10 @@ exports.install = function (req, res, next) {
                     content: "欢迎使用Noderce，欢迎与我交流Nodejs相关技术、",
                     created: dateFormat(new Date(), "isoDateTime")
                   };
-
-                  commentDao.insert(comment, function (err, result) {
+                  commentDao.insert(comment, function(err, result) {
                     if (!err) res.redirect('/admin/install?msg=success');
                   });
                 }
-
               });
             }
           });
@@ -431,7 +384,6 @@ exports.install = function (req, res, next) {
     }
   });
 };
-
 /** private function */
 function gen_session(user, res) {
   var auth_token = util.encrypt(user.name + '\t' + user.password, config.session_secret);
