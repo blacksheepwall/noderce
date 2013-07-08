@@ -13,6 +13,8 @@
            onerror="this.src='http://r.ph.126.net/image/default/duser.png'"/>
     </a>
     <p><%=item.title%></p>
+    <a href="/admin/photo/edit/<%=item.photo_id%>">编辑</a>
+    <a href="/admin/photo/delete/<%=item.photo_id%>">删除</a>
   </li>
   <% }); %>
 </ul>

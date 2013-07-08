@@ -261,6 +261,15 @@ exports.photoWrite = function(req, res) {
     });
   }
 };
+exports.photoDelete = function(req, res) {
+  if (req.method == "GET") {
+    photoDao.deleteById(req.params.id, function(err, result) {
+      if (!err) {
+        res.redirect("/admin/photo");
+      }
+    });
+  }
+};
 //URL: /admin/login
 exports.login = function(req, res) {
   if (req.method == "GET") {

@@ -23,15 +23,15 @@ exports.findOne = function(id, callback) {
 exports.save = function(obj, callback) {
   db.photo.save(obj, function(err, result) {
     callback(err, result);
-  })
+  });
 };
-exports.deleteById = function(id, callback) {
-  db.photo.remove({_id: db.ObjectID.createFromHexString(id)}, function(err, result) {
+exports.deleteById = function(photo_id, callback) {
+  db.photo.remove({photo_id: photo_id}, function(err, result) {
     callback(err, result);
-  })
+  });
 };
 exports.updateByPhotoId = function(photo_id, photo, callback) {
   db.photo.update({photo_id: photo_id}, {$set: photo}, function(err, result) {
     callback(err, result);
-  })
+  });
 };
